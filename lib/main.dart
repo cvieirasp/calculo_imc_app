@@ -33,24 +33,26 @@ class _HomeState extends State<Home> {
     });
   }
 
-  void _calculate(){
+  void _calculate() {
     setState(() {
       double weight = double.parse(weightController.text);
       double height = double.parse(heightController.text)/100;
       double result = weight/(height*height);
 
-      if(result < 18.6) {
+      if(result < 17.0) {
+        _infoText = "Muito abaixo do Peso";
+      } else if(result >= 17.0 && result < 18.49) {
         _infoText = "Abaixo do Peso";
-      } else if(result >= 18.6 && result < 24.9) {
+      } else if(result >= 18.49 && result < 24.9) {
         _infoText = "Peso Ideal";
       } else if(result >= 24.9 && result < 29.9) {
         _infoText = "Levemente Acima do Peso";
       } else if(result >= 29.9 && result < 34.9) {
-        _infoText = "Obesidade GRau I";
+        _infoText = "Obesidade Grau I";
       } else if(result >= 34.9 && result < 39.9) {
-        _infoText = "Obesidade GRau II";
+        _infoText = "Obesidade Grau II";
       } else {
-        _infoText = "Obesidade GRau III";
+        _infoText = "Obesidade Grau III";
       }
 
       _imcInfo = "(${result.toStringAsPrecision(4)})";
@@ -92,7 +94,10 @@ class _HomeState extends State<Home> {
                 validator: (value) {
                   if(value.isEmpty) {
                     return "Insira o seu Peso!";
+                  } else if (double.tryParse(value) == null) {
+                    return "Insira um valor numérico correto!";
                   }
+                  return null;
                 },
               ),
               TextFormField(
@@ -107,17 +112,21 @@ class _HomeState extends State<Home> {
                 validator: (value) {
                   if(value.isEmpty) {
                     return "Insira a sua Altura!";
+                  } else if (double.tryParse(value) == null) {
+                    return "Insira um valor numérico correto!";
                   }
+                  return null;
                 },
               ),
               Padding(
-                padding: EdgeInsets.only(top: 10.0, bottom: 10.0),
+                padding: EdgeInsets.only(top: 30.0, bottom: 30.0),
                 child: Container(
-                  height: 80.0,
+                  height: 60.0,
                   child: RaisedButton(
                     onPressed: () {
                       if(_formKey.currentState.validate()) {
                         _calculate();
+                        FocusScope.of(context).requestFocus(new FocusNode());
                       }
                     },
                     child: Text(
